@@ -1,10 +1,4 @@
-<script setup lang="ts">
-import { ref } from "vue";
-import { Dialog, DialogPanel } from "@headlessui/vue";
-import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
-
-const mobileMenuOpen = ref(false);
-</script>
+<script setup lang="ts"></script>
 
 <template>
     <div class="bg-gray-900" id="sign-in-form">
