@@ -6,10 +6,10 @@ definePageMeta({
 });
 
 onMounted(() => {
-    setNavigationCurrentItem("Home");
+    setNavigationCurrentItem("Scheduler");
 });
 </script>
 
 <template>
-    <div>Home</div>
+    <div>Scheduler</div>
 </template>
