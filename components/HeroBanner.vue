@@ -5,17 +5,16 @@
         <div class="mx-auto max-w-7xl lg:grid lg:grid-cols-12 lg:gap-x-8 lg:px-8">
             <div class="px-6 pb-24 pt-10 sm:pb-32 lg:col-span-7 lg:px-0 lg:pb-56 lg:pt-48 xl:col-span-6">
                 <div class="mx-auto max-w-2xl lg:mx-0">
+                    <nuxt-img class="h-14" src="/images/logo.png" alt="Instamation logo" />
                     <div class="hidden sm:mt-32 sm:flex lg:mt-16"></div>
                     <h1 class="mt-24 text-4xl font-bold tracking-tight text-gray-900 sm:mt-10 sm:text-6xl">
-                        An AI powered platform that automatically generates Instagram image descriptions
+                        An AI platform that generates Instagram image descriptions automatically
                     </h1>
                     <p class="mt-6 text-lg leading-8 text-gray-600">
-                        This AI platform is designed to automatically generate image descriptions for Instagram posts.
-                        Using image content as a basis, the tool can accurately and relevantly describe images without
-                        requiring human input. Users can upload their images, schedule Instagram posts, and this tool
-                        will generate descriptions, add hashtags, and manage the upload to their Instagram account. With
-                        this platform, users can save time and effort in generating accurate and relevant image
-                        descriptions.
+                        This AI platform automatically generates image descriptions for Instagram posts. It accurately
+                        and relevantly describes images based on their content. Users upload their images, schedule
+                        Instagram posts, and the tool generates descriptions, adds hashtags, and manages the upload.
+                        This platform saves users time and effort in generating image descriptions.
                     </p>
                     <div class="mt-10 flex items-center gap-x-6 relative z-10">
                         <a
