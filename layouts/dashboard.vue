@@ -1,12 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from "@headlessui/vue";
-import { Bars3Icon, DocumentDuplicateIcon, HomeIcon, XMarkIcon } from "@heroicons/vue/24/outline";
-
-const navigation = [
-    { name: "Home", to: "/dashboard", icon: HomeIcon, current: true },
-    { name: "Assets", to: "/dashboard/assets", icon: DocumentDuplicateIcon, current: false },
-];
+import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
+const { navigation } = useDashboardHeader();
 
 const sidebarOpen = ref(false);
 </script>
