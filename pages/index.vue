@@ -1,6 +1,8 @@
 <script setup lang="ts"></script>
 
 <template>
-    <HeroBanner />
-    <SignInForm />
+    <div>
+        <HeroBanner />
+        <SignInForm />
+    </div>
 </template>

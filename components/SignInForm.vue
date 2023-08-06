@@ -3,7 +3,7 @@ const { $auth } = useNuxtApp();
 
 async function signIn(e: Event) {
     e.preventDefault();
-    $auth.loginWithRedirect();
+    await $auth.loginWithRedirect();
 }
 </script>
 

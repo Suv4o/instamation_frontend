@@ -1,22 +1,41 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from "@headlessui/vue";
+import { ChevronDownIcon } from "@heroicons/vue/20/solid";
+import {
+    Dialog,
+    DialogPanel,
+    TransitionChild,
+    TransitionRoot,
+    Menu,
+    MenuButton,
+    MenuItem,
+    MenuItems,
+} from "@headlessui/vue";
 import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
+import { useAuthStore } from "@/stores/auth";
+const authStore = useAuthStore();
+const { $auth } = useNuxtApp();
 const { navigation } = useDashboardHeader();
 const sidebarOpen = ref(false);
-const { $auth } = useNuxtApp();
+const router = useRouter();
+
+const userPicture = computed(() => {
+    const user = authStore.user;
+    if (!user) {
+        return null;
+    }
+    return user.picture;
+});
 
 onMounted(async () => {
-    // $auth.logout();
-    const user = await $auth.getUser();
-    console.log(user);
-    const isAuthenticated = await $auth.isAuthenticated();
-    console.log(isAuthenticated);
-    const claims = await $auth.getIdTokenClaims();
-    console.log(claims);
-    const accessToken = await $auth.getTokenSilently();
-    console.log(accessToken);
+    if (!authStore.hasUserBeenInitialised) {
+        await authStore.onAuthInit();
+    }
 });
+
+async function signOut() {
+    await $auth.logout();
+}
 </script>
 
 <template>
@@ -130,16 +149,50 @@ onMounted(async () => {
                             </ul>
                         </li>
                         <li class="-mx-6 mt-auto">
-                            <a
-                                href="#"
-                                class="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white hover:bg-gray-800"
-                            >
-                                <div class="h-8 w-8 rounded-full bg-gray-800 inline-flex justify-center items-center">
-                                    TC
+                            <Menu as="div" class="relative text-left">
+                                <div>
+                                    <MenuButton
+                                        class="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white hover:bg-gray-800 w-full"
+                                    >
+                                        <div class="w-full flex items-center">
+                                            <nuxt-img
+                                                v-if="userPicture"
+                                                :src="userPicture"
+                                                class="h-8 w-8 rounded-full bg-gray-800 inline-flex justify-center items-center mr-2"
+                                            />
+                                            <span class="sr-only">Your profile</span>
+                                            <span aria-hidden="true">{{ authStore.user.nickname }}</span>
+                                        </div>
+                                        <ChevronDownIcon class="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
+                                    </MenuButton>
                                 </div>
-                                <span class="sr-only">Your profile</span>
-                                <span aria-hidden="true">Tom Cook</span>
-                            </a>
+
+                                <transition
+                                    enter-active-class="transition ease-out duration-100"
+                                    enter-from-class="transform opacity-0 scale-95"
+                                    enter-to-class="transform opacity-100 scale-100"
+                                    leave-active-class="transition ease-in duration-75"
+                                    leave-from-class="transform opacity-100 scale-100"
+                                    leave-to-class="transform opacity-0 scale-95"
+                                >
+                                    <MenuItems
+                                        class="absolute bottom-16 left-6 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                                    >
+                                        <div class="py-1">
+                                            <form @submit="signOut">
+                                                <MenuItem>
+                                                    <button
+                                                        type="submit"
+                                                        class="block w-full px-4 py-2 text-left text-sm"
+                                                    >
+                                                        Sign out
+                                                    </button>
+                                                </MenuItem>
+                                            </form>
+                                        </div>
+                                    </MenuItems>
+                                </transition>
+                            </Menu>
                         </li>
                     </ul>
                 </nav>
@@ -152,14 +205,12 @@ onMounted(async () => {
                 <Bars3Icon class="h-6 w-6" aria-hidden="true" />
             </button>
             <div class="flex-1 text-sm font-semibold leading-6 text-white">Dashboard</div>
-            <a href="#">
-                <span class="sr-only">Your profile</span>
-                <div
-                    class="h-8 w-8 rounded-full bg-gray-800 text-white font-semibold inline-flex justify-center items-center"
-                >
-                    TC
-                </div>
-            </a>
+            <span class="sr-only">Your profile</span>
+            <nuxt-img
+                v-if="userPicture"
+                :src="userPicture"
+                class="h-8 w-8 rounded-full bg-gray-800 text-white font-semibold inline-flex justify-center items-center"
+            />
         </div>
 
         <main class="py-10 lg:pl-72">

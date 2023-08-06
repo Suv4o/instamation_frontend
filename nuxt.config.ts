@@ -5,7 +5,10 @@ export default defineNuxtConfig({
             link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.png" }],
         },
     },
-    modules: ["@nuxt/image"],
+    modules: ["@nuxt/image", "@pinia/nuxt"],
+    pinia: {
+        autoImports: ["defineStore"],
+    },
     css: ["~/assets/css/main.css"],
     postcss: {
         plugins: {
