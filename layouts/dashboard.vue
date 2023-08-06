@@ -17,7 +17,6 @@ const authStore = useAuthStore();
 const { $auth } = useNuxtApp();
 const { navigation } = useDashboardHeader();
 const sidebarOpen = ref(false);
-const router = useRouter();
 
 const userPicture = computed(() => {
     const user = authStore.user;
@@ -205,12 +204,43 @@ async function signOut() {
                 <Bars3Icon class="h-6 w-6" aria-hidden="true" />
             </button>
             <div class="flex-1 text-sm font-semibold leading-6 text-white">Dashboard</div>
-            <span class="sr-only">Your profile</span>
-            <nuxt-img
-                v-if="userPicture"
-                :src="userPicture"
-                class="h-8 w-8 rounded-full bg-gray-800 text-white font-semibold inline-flex justify-center items-center"
-            />
+            <Menu as="div" class="relative inline-block text-left">
+                <div>
+                    <MenuButton>
+                        <div>
+                            <span class="sr-only">Your profile</span>
+                            <nuxt-img
+                                v-if="userPicture"
+                                :src="userPicture"
+                                class="h-8 w-8 rounded-full bg-gray-800 text-white font-semibold inline-flex justify-center items-center"
+                            />
+                        </div>
+                    </MenuButton>
+                </div>
+
+                <transition
+                    enter-active-class="transition ease-out duration-100"
+                    enter-from-class="transform opacity-0 scale-95"
+                    enter-to-class="transform opacity-100 scale-100"
+                    leave-active-class="transition ease-in duration-75"
+                    leave-from-class="transform opacity-100 scale-100"
+                    leave-to-class="transform opacity-0 scale-95"
+                >
+                    <MenuItems
+                        class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                    >
+                        <div class="py-1">
+                            <form @submit="signOut">
+                                <MenuItem>
+                                    <button type="submit" class="block w-full px-4 py-2 text-left text-sm">
+                                        Sign out
+                                    </button>
+                                </MenuItem>
+                            </form>
+                        </div>
+                    </MenuItems>
+                </transition>
+            </Menu>
         </div>
 
         <main class="py-10 lg:pl-72">
