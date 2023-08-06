@@ -3,8 +3,20 @@ import { ref } from "vue";
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from "@headlessui/vue";
 import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
 const { navigation } = useDashboardHeader();
-
 const sidebarOpen = ref(false);
+const { $auth } = useNuxtApp();
+
+onMounted(async () => {
+    // $auth.logout();
+    const user = await $auth.getUser();
+    console.log(user);
+    const isAuthenticated = await $auth.isAuthenticated();
+    console.log(isAuthenticated);
+    const claims = await $auth.getIdTokenClaims();
+    console.log(claims);
+    const accessToken = await $auth.getTokenSilently();
+    console.log(accessToken);
+});
 </script>
 
 <template>

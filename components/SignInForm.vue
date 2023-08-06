@@ -1,4 +1,11 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const { $auth } = useNuxtApp();
+
+async function signIn(e: Event) {
+    e.preventDefault();
+    $auth.loginWithRedirect();
+}
+</script>
 
 <template>
     <div class="bg-gray-900" id="sign-in-form">
@@ -33,23 +40,10 @@
             </div>
             <div class="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
                 <div class="hidden sm:mb-8 sm:flex sm:justify-center"></div>
-                <form class="text-center">
+                <form @submit="signIn" class="text-center">
                     <h1 class="text-4xl font-bold tracking-tight text-white sm:text-6xl mb-8">
                         Sign in to your account for free
                     </h1>
-                    <div>
-                        <label for="email" class="block text-sm font-medium leading-6 text-white">Email address</label>
-                        <div class="mt-2">
-                            <input
-                                id="email"
-                                name="email"
-                                type="email"
-                                autocomplete="email"
-                                required
-                                class="block w-full rounded-md border-0 bg-white/5 py-1.5 px-2 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-cyan-500 sm:text-sm sm:leading-6"
-                            />
-                        </div>
-                    </div>
                     <div class="mt-10 flex items-center justify-center gap-x-6">
                         <button
                             type="submit"
