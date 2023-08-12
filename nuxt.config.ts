@@ -24,6 +24,7 @@ export default defineNuxtConfig({
             AUTH0_API_AUDIENCE: process.env.AUTH0_API_AUDIENCE,
         },
     },
+    ssr: false,
     typescript: {
         typeCheck: true,
         strict: true,
