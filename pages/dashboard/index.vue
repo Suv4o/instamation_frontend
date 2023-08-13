@@ -5,6 +5,8 @@ definePageMeta({
     layout: "dashboard",
 });
 
+// This is the only thing that is different from the login page
+
 onMounted(() => {
     setNavigationCurrentItem("Home");
 });
