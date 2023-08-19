@@ -29,6 +29,8 @@ export const useAuthStore = defineStore("authStore", () => {
         const userInfo = await $auth.getIdTokenClaims();
         const accessToken = await $auth.getTokenSilently();
 
+        console.log(accessToken);
+
         user.value.email = userInfo?.email ?? "";
         user.value.name = userInfo?.name ?? "";
         user.value.nickname = userInfo?.nickname ?? "";
