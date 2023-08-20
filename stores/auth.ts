@@ -40,5 +40,21 @@ export const useAuthStore = defineStore("authStore", () => {
     hasUserBeenInitialised.value = true;
   }
 
-  return { user, hasUserBeenInitialised, isUserAuthenticated, onAuthInit };
+  async function getAccessToken() {
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+
+    if (user.value.accessTokenExpiresAt < currentTimestamp) {
+      user.value.accessToken = await $auth.getTokenSilently();
+    }
+
+    return user.value.accessToken;
+  }
+
+  return {
+    user,
+    hasUserBeenInitialised,
+    isUserAuthenticated,
+    onAuthInit,
+    getAccessToken,
+  };
 });

@@ -1,38 +1,23 @@
 <script setup lang="ts">
 import { useAuthStore } from "@/stores/auth";
+import { useSettingsStore } from "@/stores/settings";
 const authStore = useAuthStore();
-const runtimeConfig = useRuntimeConfig();
-const isSaving = ref(false);
-const userName = ref("");
-const password = ref("");
+const settingsStore = useSettingsStore();
 
-async function saveSettings(e: Event) {
-  try {
-    e.preventDefault();
-    isSaving.value = true;
+onMounted(() => {
+  settingsStore.getSettings();
+});
 
-    await fetch(`${runtimeConfig.public.BACKEND_URL}/settings`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${authStore.user.accessToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        instagram_username: userName.value,
-        instagram_password: password.value,
-      }),
-    });
-
-    isSaving.value = false;
-  } catch (error) {
-    isSaving.value = false;
-    console.error(error);
-  }
-}
+watch(
+  () => authStore.user.accessToken,
+  () => {
+    settingsStore.getSettings();
+  },
+);
 </script>
 
 <template>
-  <form @submit="saveSettings">
+  <form @submit="settingsStore.saveSettings">
     <div class="space-y-12">
       <div
         class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3"
@@ -58,7 +43,7 @@ async function saveSettings(e: Event) {
             >
             <div class="mt-2">
               <input
-                v-model="userName"
+                v-model="settingsStore.userName"
                 type="text"
                 name="user-name"
                 id="user-name"
@@ -76,7 +61,7 @@ async function saveSettings(e: Event) {
             >
             <div class="mt-2">
               <input
-                v-model="password"
+                v-model="settingsStore.password"
                 type="password"
                 name="password"
                 id="password"
@@ -91,7 +76,7 @@ async function saveSettings(e: Event) {
 
     <div class="mt-6 flex items-center justify-end gap-x-6">
       <button
-        :disabled="isSaving"
+        :disabled="settingsStore.isSaving"
         type="submit"
         class="rounded-md bg-cyan-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-cyan-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
       >
