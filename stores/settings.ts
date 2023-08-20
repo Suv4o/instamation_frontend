@@ -58,6 +58,7 @@ export const useSettingsStore = defineStore("settingsStore", () => {
     userName,
     password,
     isSaving,
+    hasUserBeenInitialised,
     saveSettings,
     getSettings,
   };
