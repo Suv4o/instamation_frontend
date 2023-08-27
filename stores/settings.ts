@@ -1,7 +1,7 @@
 import { useAuthStore } from "@/stores/auth";
 
 export const useSettingsStore = defineStore("settingsStore", () => {
-  const { notification, NotificationType } = useNotifications();
+  const { setNotification, NotificationType } = useNotifications();
   const authStore = useAuthStore();
   const runtimeConfig = useRuntimeConfig();
   const userName = ref("");
@@ -36,23 +36,21 @@ export const useSettingsStore = defineStore("settingsStore", () => {
       }
 
       isSaving.value = false;
-      notification.value = {
-        isOpen: true,
-        title: "Success",
-        message: "Your settings have been saved.",
-        type: NotificationType.SUCCESS,
-      };
+      setNotification(
+        "Success",
+        "Your settings have been saved.",
+        NotificationType.SUCCESS,
+      );
     } catch (error) {
       isSaving.value = false;
-      notification.value = {
-        isOpen: true,
-        title: "Error",
-        message:
-          error instanceof Error
-            ? error.message
-            : "An error occurred while saving your settings.",
-        type: NotificationType.ERROR,
-      };
+      setNotification(
+        "Error",
+
+        error instanceof Error
+          ? error.message
+          : "An error occurred while saving your settings.",
+        NotificationType.ERROR,
+      );
     }
   }
 
@@ -79,15 +77,13 @@ export const useSettingsStore = defineStore("settingsStore", () => {
       password.value = settings.instagram_password;
       hasUserBeenInitialised.value = true;
     } catch (error) {
-      notification.value = {
-        isOpen: true,
-        title: "Error",
-        message:
-          error instanceof Error
-            ? error.message
-            : "An error occurred while getting your settings.",
-        type: NotificationType.ERROR,
-      };
+      setNotification(
+        "Error",
+        error instanceof Error
+          ? error.message
+          : "An error occurred while getting your settings.",
+        NotificationType.ERROR,
+      );
     }
   }
 

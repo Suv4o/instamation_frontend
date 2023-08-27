@@ -4,7 +4,7 @@ import { useAuthStore } from "@/stores/auth";
 const { $auth } = useNuxtApp();
 const authStore = useAuthStore();
 const router = useRouter();
-const { notification, NotificationType } = useNotifications();
+const { setNotification, NotificationType } = useNotifications();
 
 onMounted(async () => {
   try {
@@ -19,15 +19,13 @@ onMounted(async () => {
       }
     }
   } catch (error) {
-    notification.value = {
-      isOpen: true,
-      title: "Error",
-      message:
-        error instanceof Error
-          ? error.message
-          : "An error occurred while logging in",
-      type: NotificationType.ERROR,
-    };
+    setNotification(
+      "Error",
+      error instanceof Error
+        ? error.message
+        : "An error occurred while logging in",
+      NotificationType.ERROR,
+    );
     router.push("/");
   }
 });
