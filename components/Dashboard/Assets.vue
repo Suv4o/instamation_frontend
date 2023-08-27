@@ -2,6 +2,8 @@
 import { VFileDrop } from "v-file-drop";
 import "v-file-drop/styles.css";
 import { useAuthStore } from "@/stores/auth";
+
+const { notification, NotificationType } = useNotifications();
 const authStore = useAuthStore();
 const runtimeConfig = useRuntimeConfig();
 
@@ -16,9 +18,18 @@ async function uploadFile(file: File) {
       method: "POST",
       body: formData,
     });
-    console.log(await result.json());
+    const data = await result.json();
+    if (!data.success) {
+      throw new Error(data.message);
+    }
   } catch (error) {
-    console.error(error);
+    notification.value = {
+      isOpen: true,
+      title: "Error",
+      message:
+        error instanceof Error ? error.message : "An unknown error occurred",
+      type: NotificationType.ERROR,
+    };
   }
 }
 

@@ -288,5 +288,6 @@ async function signOut() {
         <slot />
       </div>
     </main>
+    <Notifications />
   </div>
 </template>
