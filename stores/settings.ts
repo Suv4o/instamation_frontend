@@ -14,17 +14,26 @@ export const useSettingsStore = defineStore("settingsStore", () => {
       e.preventDefault();
       isSaving.value = true;
 
-      await fetch(`${runtimeConfig.public.BACKEND_URL}/settings`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${await authStore.getAccessToken()}`,
-          "Content-Type": "application/json",
+      const result = await fetch(
+        `${runtimeConfig.public.BACKEND_URL}/settings`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${await authStore.getAccessToken()}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            instagram_username: userName.value,
+            instagram_password: password.value,
+          }),
         },
-        body: JSON.stringify({
-          instagram_username: userName.value,
-          instagram_password: password.value,
-        }),
-      });
+      );
+
+      const data = await result.json();
+
+      if (!data.success) {
+        throw new Error(data.message);
+      }
 
       isSaving.value = false;
       notification.value = {
@@ -61,6 +70,11 @@ export const useSettingsStore = defineStore("settingsStore", () => {
       });
 
       const settings = await data.json();
+
+      if (!settings.success) {
+        throw new Error(settings.message);
+      }
+
       userName.value = settings.instagram_username;
       password.value = settings.instagram_password;
       hasUserBeenInitialised.value = true;
