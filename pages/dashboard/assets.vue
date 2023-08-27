@@ -2,14 +2,16 @@
 const { setNavigationCurrentItem } = useDashboardHeader();
 
 definePageMeta({
-    layout: "dashboard",
+  layout: "dashboard",
 });
 
 onMounted(() => {
-    setNavigationCurrentItem("Assets");
+  setNavigationCurrentItem("Assets");
 });
 </script>
 
 <template>
-    <div>Assets</div>
+  <div class="container">
+    <DashboardAssets />
+  </div>
 </template>
