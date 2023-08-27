@@ -19,7 +19,7 @@ async function uploadFile(file: File) {
       body: formData,
     });
     const data = await result.json();
-    if (!data.success) {
+    if (data.success != null && !data.success) {
       throw new Error(data.message);
     }
   } catch (error) {

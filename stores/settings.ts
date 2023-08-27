@@ -31,7 +31,7 @@ export const useSettingsStore = defineStore("settingsStore", () => {
 
       const data = await result.json();
 
-      if (!data.success) {
+      if (data.success != null && !data.success) {
         throw new Error(data.message);
       }
 
@@ -71,7 +71,7 @@ export const useSettingsStore = defineStore("settingsStore", () => {
 
       const settings = await data.json();
 
-      if (!settings.success) {
+      if (settings.success != null && !settings.success) {
         throw new Error(settings.message);
       }
 
