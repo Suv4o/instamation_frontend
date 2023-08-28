@@ -1,55 +1,86 @@
 <script setup lang="ts">
+import { useAuthStore } from "@/stores/auth";
 import { VFileDrop } from "v-file-drop";
 import "v-file-drop/styles.css";
-import { useAuthStore } from "@/stores/auth";
-
-const { setNotification, NotificationType } = useNotifications();
+import { useAssetsStore } from "@/stores/assets";
+import { ArrowPathIcon } from "@heroicons/vue/20/solid";
 const authStore = useAuthStore();
-const runtimeConfig = useRuntimeConfig();
+const assetsStore = useAssetsStore();
+const isUploading = ref(false);
 
-async function uploadFile(file: File) {
-  try {
-    const formData = new FormData();
-    formData.append("image", file);
-    const result = await fetch(`${runtimeConfig.public.BACKEND_URL}/assets`, {
-      headers: {
-        Authorization: `Bearer ${await authStore.getAccessToken()}`,
-      },
-      method: "POST",
-      body: formData,
-    });
-    const data = await result.json();
-    if (data.success != null && !data.success) {
-      throw new Error(data.message);
-    }
-  } catch (error) {
-    setNotification(
-      "Error",
-      error instanceof Error ? error.message : "An unknown error occurred",
-      NotificationType.ERROR,
-    );
+onMounted(() => {
+  assetsStore.getAssets();
+});
+
+watch(
+  () => authStore.user.accessToken,
+  () => {
+    assetsStore.getAssets();
+  },
+);
+
+async function onFileChange(files: FileList) {
+  isUploading.value = true;
+  if (!files.length) {
+    isUploading.value = false;
+    return;
   }
-}
-
-function onFileChange(files: FileList) {
-  const file = files[0];
-  uploadFile(file);
+  for (const file of files) {
+    const data = await assetsStore.uploadFile(file);
+    assetsStore.assets.push(data.image);
+  }
+  isUploading.value = false;
 }
 </script>
 
 <template>
   <div>
-    <v-file-drop
-      @change="onFileChange"
-      multiple
-      :accept="['image/png', 'image/jpeg']"
-    >
-      <div
-        class="flex h-96 items-center justify-center rounded-3xl border border-cyan-600"
+    <div class="mb-8">
+      <v-file-drop
+        v-if="!isUploading"
+        @change="onFileChange"
+        multiple
+        :accept="['image/png', 'image/jpeg']"
       >
-        <p class="text-center text-5xl text-cyan-600">Drop your images here!</p>
+        <div
+          class="flex h-96 items-center justify-center rounded-lg border border-cyan-600"
+        >
+          <p class="text-center text-4xl text-cyan-600">
+            Drop your images here!
+          </p>
+        </div>
+      </v-file-drop>
+      <div v-else>
+        <div
+          class="flex h-96 items-center justify-center rounded-lg border border-cyan-600"
+        >
+          <ArrowPathIcon
+            class="mr-2 h-12 w-12 animate-spin text-cyan-600"
+            aria-hidden="true"
+          />
+          <p class="text-center text-4xl text-cyan-600">Upload...</p>
+        </div>
       </div>
-    </v-file-drop>
+    </div>
+    <div class="bg-white">
+      <h2 class="sr-only">Images</h2>
+
+      <div
+        class="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8"
+      >
+        <div v-for="asset in assetsStore.assets" :key="asset.id">
+          <div
+            class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"
+          >
+            <img
+              :src="asset.url"
+              :alt="asset.original_filename"
+              class="h-full w-full object-cover object-center"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 

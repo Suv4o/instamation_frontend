@@ -7,7 +7,7 @@ export const useSettingsStore = defineStore("settingsStore", () => {
   const userName = ref("");
   const password = ref("");
   const isSaving = ref(false);
-  const hasUserBeenInitialised = ref(false);
+  const hasSettingsBeenInitialised = ref(false);
 
   async function saveSettings(e: Event) {
     try {
@@ -56,7 +56,7 @@ export const useSettingsStore = defineStore("settingsStore", () => {
 
   async function getSettings() {
     try {
-      if (!authStore.user.accessToken || hasUserBeenInitialised.value) {
+      if (!authStore.user.accessToken || hasSettingsBeenInitialised.value) {
         return;
       }
       const data = await fetch(`${runtimeConfig.public.BACKEND_URL}/settings`, {
@@ -75,7 +75,7 @@ export const useSettingsStore = defineStore("settingsStore", () => {
 
       userName.value = settings.instagram_username;
       password.value = settings.instagram_password;
-      hasUserBeenInitialised.value = true;
+      hasSettingsBeenInitialised.value = true;
     } catch (error) {
       setNotification(
         "Error",
@@ -91,7 +91,7 @@ export const useSettingsStore = defineStore("settingsStore", () => {
     userName,
     password,
     isSaving,
-    hasUserBeenInitialised,
+    hasSettingsBeenInitialised,
     saveSettings,
     getSettings,
   };
