@@ -19,6 +19,10 @@ watch(
   },
 );
 
+function deleteAsset(id: string) {
+  assetsStore.deleteAsset(id);
+}
+
 async function onFileChange(files: FileList) {
   isUploading.value = true;
   if (!files.length) {
@@ -70,7 +74,7 @@ async function onFileChange(files: FileList) {
       >
         <div v-for="asset in assetsStore.assets" :key="asset.id">
           <div
-            class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"
+            class="aspect-h-1 aspect-w-1 mb-2 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"
           >
             <img
               :src="asset.url"
@@ -78,6 +82,13 @@ async function onFileChange(files: FileList) {
               class="h-full w-full object-cover object-center"
             />
           </div>
+          <button
+            @click="deleteAsset(asset.id)"
+            type="button"
+            class="rounded bg-cyan-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-cyan-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
+          >
+            Delete
+          </button>
         </div>
       </div>
     </div>
