@@ -7,6 +7,9 @@ import { ArrowPathIcon } from "@heroicons/vue/20/solid";
 const authStore = useAuthStore();
 const assetsStore = useAssetsStore();
 const isUploading = ref(false);
+const isModalOpen = ref(false);
+const isProcessing = ref(false);
+const deletingAssetId = ref("");
 
 onMounted(() => {
   assetsStore.getAssets();
@@ -19,8 +22,25 @@ watch(
   },
 );
 
-function deleteAsset(id: string) {
-  assetsStore.deleteAsset(id);
+async function openModal(assetId: string) {
+  deletingAssetId.value = assetId;
+  isModalOpen.value = true;
+}
+
+async function deleteAsset(id: string) {
+  isProcessing.value = true;
+  await assetsStore.deleteAsset(id);
+  isProcessing.value = false;
+}
+
+async function modalOk() {
+  await deleteAsset(deletingAssetId.value);
+  isModalOpen.value = false;
+}
+
+function modalCancel() {
+  isModalOpen.value = false;
+  deletingAssetId.value = "";
 }
 
 async function onFileChange(files: FileList) {
@@ -83,7 +103,7 @@ async function onFileChange(files: FileList) {
             />
           </div>
           <button
-            @click="deleteAsset(asset.id)"
+            @click="openModal(asset.id)"
             type="button"
             class="rounded bg-cyan-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-cyan-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
           >
@@ -93,6 +113,15 @@ async function onFileChange(files: FileList) {
       </div>
     </div>
   </div>
+  <Modal
+    :open="isModalOpen"
+    :processing="isProcessing"
+    type="warning"
+    @ok="modalOk"
+    @cancel="modalCancel"
+    title="Delete Image"
+    message="Are you sure you want to delete this image?"
+  />
 </template>
 
 <style scoped>
